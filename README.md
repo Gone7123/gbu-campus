@@ -46,10 +46,11 @@ When startup fails, the server prints this line and does not print the underlyin
 Campus startup failed. Check the completed build and port configuration.
 ```
 
-Two causes account for it:
+Three causes account for it:
 
 1. **No completed build.** The server loads `dist/` at startup and requires both `dist/index.html` and `dist/night/index.html`. A build that stopped early, or `npm start` run before `npm run build`, leaves at least one of them missing. Run `npm run build` and start again; it ends with `Ready: <n> deployment files`. To inspect the output, run `dir dist\night` (Windows) or `ls dist/night` (macOS or Linux).
-2. **Port already in use.** Port 5190 is the default, and the usual holder is a server you started earlier and left running. Open http://127.0.0.1:5190/healthz: `{"ok":true}` means it is this project's server. Stop it with `taskkill /PID <pid> /F` on Windows (find the ID with `netstat -ano | findstr ":5190 "`) or `kill <pid>` on macOS or Linux (find the ID with `lsof -i :5190`). You can also set `PORT` as shown above and open the matching URL; an invalid value fails the same way.
+2. **Port already in use.** Port 5190 is the default, and the usual holder is a server you started earlier and left running. Open http://127.0.0.1:5190/healthz: `{"ok":true}` means it is this project's server. Stop it with `taskkill /PID <pid> /F` on Windows (find the ID with `netstat -ano | findstr ":5190 "`) or `kill <pid>` on macOS or Linux (find the ID with `lsof -i :5190`). You can also set `PORT` as shown above and open the matching URL.
+3. **An invalid `PORT`.** `PORT` must be a whole number from 1 to 65535; anything else is rejected before the server listens, with the same message.
 
 A successful start prints `Campus experience is ready.` The server serves the build it loaded at startup, so restart it after every rebuild and every port change.
 
